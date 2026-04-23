@@ -1,40 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eshalarch</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Naksha | Sketch Your Dream</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Reset & Base Settings */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; overflow-x: hidden; }
 
-<style>
-body { margin:0; }
-</style>
+    /* =========================================
+       1. SPLASH SCREEN (VIDEO INTRO) STYLES
+       ========================================= */
+    #splash-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background-color: #ffffff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 9999;
+      transition: all 1s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .intro-logo {
+      display: flex; align-items: center;
+      font-family: 'Montserrat', sans-serif; font-size: 4.5rem; font-weight: 700;
+    }
+
+    /* Animation Steps for Intro */
+    .intro-e { color: #eb6923; opacity: 0; animation: fadeIn 0.5s forwards 0.5s; }
+    .intro-dash { color: #5c5c5c; opacity: 0; margin: 0 5px; animation: fadeIn 0.5s forwards 1s; }
+    .intro-house { 
+      color: #eb6923; font-size: 3.5rem; margin: 0 10px; opacity: 0;
+      transform: translateY(-20px); animation: dropIn 0.5s forwards 1.5s; 
+    }
+    .intro-naksha { color: #4b7dbd; opacity: 0; animation: slideRight 0.5s forwards 2s; }
+    
+    .intro-slogan {
+      font-family: 'Montserrat', sans-serif; font-size: 1.5rem; color: #5c5c5c;
+      margin-top: 15px; opacity: 0; transform: translateY(20px);
+      animation: fadeInUp 0.5s forwards 2.6s;
+    }
+
+    /* Keyframes for video-like effect */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes dropIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* =========================================
+       2. MAIN HEADER STYLES (TOP LEFT & RIGHT)
+       ========================================= */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+      background: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 5%; z-index: 1000;
+      opacity: 0; transform: translateY(-100%);
+      transition: all 0.8s ease;
+    }
+
+    /* Class added by JS to show header */
+    header.show-header { opacity: 1; transform: translateY(0); }
+
+    .header-left { display: flex; flex-direction: column; line-height: 1.1; }
+    .header-logo-text { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center;}
+    .header-slogan { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #5c5c5c; font-weight: 600; margin-top: 4px; letter-spacing: 0.5px;}
+    
+    .menu-btn { font-size: 1.8rem; color: #5c5c5c; cursor: pointer; transition: 0.3s; }
+    .menu-btn:hover { color: #eb6923; }
+
+  </style>
 </head>
+<body>
 
-<body class="bg-gray-100">
+  <div id="splash-screen">
+    <div class="intro-logo">
+      <span class="intro-e">e</span>
+      <span class="intro-dash">-</span>
+      <i class="fa-solid fa-house-chimney intro-house"></i>
+      <span class="intro-naksha">Naksha</span>
+    </div>
+    <div class="intro-slogan">Sketch Your Dream</div>
+  </div>
 
-<!-- Header -->
-<div class="bg-blue-600 text-white p-4 text-center text-xl font-bold">
-Eshalarch
-</div>
+  <header id="main-header">
+    <div class="header-left">
+      <div class="header-logo-text">
+        <span style="color: #eb6923;">e</span>
+        <span style="color: #5c5c5c; margin: 0 4px;">-</span>
+        <span style="color: #4b7dbd;">Naksha</span>
+      </div>
+      <div class="header-slogan">Sketch Your Dream</div>
+    </div>
+    
+    <div class="menu-btn">
+      <i class="fa-solid fa-bars-staggered"></i>
+    </div>
+  </header>
 
-<!-- Content -->
-<div class="p-4">
-<h2 class="text-lg font-semibold">Welcome</h2>
-<p class="text-gray-600">Your architecture planning website</p>
+  <script>
+    window.onload = () => {
+      // 4 seconds tak intro animation chalega, phir header me shift hoga
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        const header = document.getElementById('main-header');
+        
+        // Splash screen ko upar slide karke hide karna
+        splash.style.transform = 'translateY(-100vh)';
+        splash.style.opacity = '0';
+        
+        // Header ko smoothly show karna
+        setTimeout(() => {
+          splash.style.display = 'none'; // Code se hata dena
+          header.classList.add('show-header');
+        }, 800); 
 
-<div class="mt-4 bg-white p-4 rounded-xl shadow">
-House Planning Tools Coming Soon...
-</div>
-</div>
-
-<!-- Bottom Navigation -->
-<div class="fixed bottom-0 w-full bg-white shadow flex justify-around p-3">
-<div>🏠 Home</div>
-<div>📐 Plan</div>
-<div>📞 Contact</div>
-</div>
-
+      }, 4200); // 4.2 seconds ki timing
+    };
+  </script>
 </body>
 </html>
