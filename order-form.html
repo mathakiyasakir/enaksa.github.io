@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Your Plan | e-Naksha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f4f6f9; padding: 20px; }
+    .form-card { max-width: 500px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+    .submit-btn { width: 100%; padding: 12px; background: #4b7dbd; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="form-card">
+    <h2 style="font-family: Montserrat; text-align: center; color: #4b7dbd;">Order Details</h2>
+    <input type="text" id="plot-size" placeholder="Plot Size (e.g. 20x50 sqft)">
+    <select id="facing">
+      <option value="">Select Facing</option>
+      <option value="East">East</option>
+      <option value="West">West</option>
+      <option value="North">North</option>
+      <option value="South">South</option>
+    </select>
+    <select id="plan-type">
+      <option value="2D">2D Planning</option>
+      <option value="3D">3D Elevation</option>
+    </select>
+    <textarea id="requirements" placeholder="Other Requirements (e.g. 2 BHK, Garden)"></textarea>
+    <button class="submit-btn" id="submit-order">Submit Order</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyARmOCO4APamzc8wuUlp5rEgPH8hZUMX6U",
+      authDomain: "enkasha-99c34.firebaseapp.com",
+      projectId: "enkasha-99c34",
+      appId: "1:759836461630:web:30cc76c2c1075a3df99f6f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    document.getElementById('submit-order').onclick = async () => {
+      const user = auth.currentUser;
+      if(!user) return alert("Please login first!");
+
+      const data = {
+        userId: user.uid,
+        email: user.email,
+        plotSize: document.getElementById('plot-size').value,
+        facing: document.getElementById('facing').value,
+        planType: document.getElementById('plan-type').value,
+        req: document.getElementById('requirements').value,
+        date: new Date()
+      };
+
+      try {
+        await addDoc(collection(db, "orders"), data);
+        alert("Order Success! We will contact you soon.");
+        window.location.href = "index.html";
+      } catch(e) { alert("Error placing order."); }
+    };
+  </script>
+</body>
+</html>
