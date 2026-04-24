@@ -4,50 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | e-Naksha</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root { --orange: #eb6923; --blue: #4b7dbd; --bg: #f8fafc; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--bg); overflow: hidden; }
-    
-    #splash-screen { position: fixed; inset: 0; background: #fff; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.8s; }
-    .logo-anim { font-family: 'Montserrat'; font-size: 3.5rem; }
-
-    .auth-container { height: 100vh; display: flex; justify-content: center; align-items: center; opacity: 0; transition: 1s; }
-    .auth-box { background: #fff; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; border-top: 6px solid var(--orange); }
-    
-    h2 { color: var(--blue); margin-bottom: 20px; font-weight: 700; }
-    input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 10px; outline: none; }
-    input:focus { border-color: var(--blue); }
-    
-    .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-    .btn-main { background: var(--blue); color: #fff; }
-    .btn-toggle { background: transparent; color: var(--orange); border: 2px solid var(--orange); margin-top: 15px; }
-    
-    #forgotPass { color: #888; font-size: 0.85rem; cursor: pointer; display: block; margin: 10px 0; }
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #4b7dbd, #eb6923); height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
+    .login-card { background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 350px; text-align: center; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+    button { width: 100%; padding: 12px; background: #eb6923; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
+    button:hover { background: #d1561a; }
+    .toggle-link { margin-top: 15px; font-size: 0.85rem; color: #5c5c5c; cursor: pointer; }
+    #message { color: red; font-size: 0.8rem; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div id="splash-screen">
-    <div class="logo-anim"><span style="color:var(--orange)">e</span><span style="color:var(--blue)">-Naksha</span></div>
-  </div>
 
-  <div class="auth-container" id="authContainer">
-    <div class="auth-box">
-      <h2 id="formTitle">Sign In</h2>
-      <div id="nameField" style="display:none;"><input type="text" id="userName" placeholder="Full Name"></div>
-      <input type="email" id="email" placeholder="Email Address">
-      <input type="password" id="password" placeholder="Password">
-      <button class="btn btn-main" id="actionBtn">Sign In</button>
-      <span id="forgotPass">Forgot Password?</span>
-      <button class="btn btn-toggle" id="toggleBtn">Create New Account</button>
+  <div class="login-card">
+    <h2 id="formTitle" style="color: #4b7dbd; margin-bottom: 20px;">Login</h2>
+    <div id="nameField" style="display: none;">
+      <input type="text" id="userName" placeholder="Full Name">
     </div>
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button id="actionBtn">Sign In</button>
+    <div id="message"></div>
+    <div class="toggle-link" id="toggleBtn">New to e-Naksha? Create Account</div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyARmOCO4APamzc8wuUlp5rEgPH8hZUMX6U",
@@ -59,46 +43,33 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    window.onload = () => {
-      setTimeout(() => {
-        document.getElementById('splash-screen').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('splash-screen').style.display = 'none';
-          document.getElementById('authContainer').style.opacity = '1';
-        }, 800);
-      }, 3000);
-    };
-
     let isLogin = true;
-    const toggleBtn = document.getElementById('toggleBtn');
-    const nameField = document.getElementById('nameField');
-    const actionBtn = document.getElementById('actionBtn');
 
-    toggleBtn.addEventListener('click', () => {
+    document.getElementById('toggleBtn').addEventListener('click', () => {
       isLogin = !isLogin;
-      document.getElementById('formTitle').innerText = isLogin ? "Sign In" : "Register";
-      nameField.style.display = isLogin ? "none" : "block";
-      actionBtn.innerText = isLogin ? "Sign In" : "Sign Up";
-      toggleBtn.innerText = isLogin ? "Create New Account" : "Back to Login";
+      document.getElementById('formTitle').innerText = isLogin ? "Login" : "Register";
+      document.getElementById('nameField').style.display = isLogin ? "none" : "block";
+      document.getElementById('actionBtn').innerText = isLogin ? "Sign In" : "Sign Up";
+      document.getElementById('toggleBtn').innerText = isLogin ? "New to e-Naksha? Create Account" : "Already have an account? Login";
     });
 
-    actionBtn.addEventListener('click', () => {
+    document.getElementById('actionBtn').addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      const msgDiv = document.getElementById('message');
+
       if(isLogin) {
-        signInWithEmailAndPassword(auth, email, password).then(() => window.location.href = "index.html").catch(err => alert(err.message));
+        signInWithEmailAndPassword(auth, email, password)
+          .then(() => window.location.href = "index.html")
+          .catch(err => msgDiv.innerText = err.message);
       } else {
         const name = document.getElementById('userName').value;
-        createUserWithEmailAndPassword(auth, email, password).then((res) => {
-          updateProfile(res.user, { displayName: name }).then(() => window.location.href = "index.html");
-        }).catch(err => alert(err.message));
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((res) => {
+            updateProfile(res.user, { displayName: name }).then(() => window.location.href = "index.html");
+          })
+          .catch(err => msgDiv.innerText = err.message);
       }
-    });
-
-    document.getElementById('forgotPass').addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      if(!email) return alert("Enter email first");
-      sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!"));
     });
   </script>
 </body>
