@@ -3,51 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | e-Naksha</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>e-Naksha | Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --orange: #eb6923; --blue: #4b7dbd; --bg: #f8fafc; }
+    :root { --orange: #eb6923; --blue: #4b7dbd; --bg: #f4f7fa; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--bg); overflow: hidden; }
-    
-    #splash-screen { position: fixed; inset: 0; background: #fff; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.8s; }
-    .logo-anim { font-family: 'Montserrat'; font-size: 3.5rem; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg); padding-bottom: 80px; }
 
-    .auth-container { height: 100vh; display: flex; justify-content: center; align-items: center; opacity: 0; transition: 1s; }
-    .auth-box { background: #fff; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; border-top: 6px solid var(--orange); }
+    header { 
+      background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .brand { font-family: 'Montserrat'; font-size: 1.3rem; color: var(--blue); }
+    .user-greet { font-weight: 600; color: var(--blue); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+
+    .container { padding: 20px; max-width: 600px; margin: auto; }
+    .main-card { background: var(--blue); color: #fff; padding: 35px 20px; border-radius: 15px; text-align: center; cursor: pointer; }
     
-    h2 { color: var(--blue); margin-bottom: 20px; font-weight: 700; }
-    input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 10px; outline: none; }
-    input:focus { border-color: var(--blue); }
-    
-    .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-    .btn-main { background: var(--blue); color: #fff; }
-    .btn-toggle { background: transparent; color: var(--orange); border: 2px solid var(--orange); margin-top: 15px; }
-    
-    #forgotPass { color: #888; font-size: 0.85rem; cursor: pointer; display: block; margin: 10px 0; }
+    .plan-options { display: none; gap: 10px; margin-top: 15px; }
+    .btn-opt { flex: 1; padding: 15px; background: #fff; color: var(--blue); border-radius: 10px; text-decoration: none; font-weight: 600; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; width: 100%; background: #fff; display: flex;
+      justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee;
+    }
+    .nav-link { text-align: center; text-decoration: none; color: #777; font-size: 0.7rem; }
+    .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 3px; }
+    .nav-link.active { color: var(--blue); }
+    .nav-link.active i { color: var(--orange); }
   </style>
 </head>
 <body>
-  <div id="splash-screen">
-    <div class="logo-anim"><span style="color:var(--orange)">e</span><span style="color:var(--blue)">-Naksha</span></div>
-  </div>
 
-  <div class="auth-container" id="authContainer">
-    <div class="auth-box">
-      <h2 id="formTitle">Sign In</h2>
-      <div id="nameField" style="display:none;"><input type="text" id="userName" placeholder="Full Name"></div>
-      <input type="email" id="email" placeholder="Email Address">
-      <input type="password" id="password" placeholder="Password">
-      <button class="btn btn-main" id="actionBtn">Sign In</button>
-      <span id="forgotPass">Forgot Password?</span>
-      <button class="btn btn-toggle" id="toggleBtn">Create New Account</button>
+  <header>
+    <div class="brand"><span style="color:var(--orange)">e</span>-Naksha</div>
+    <div class="user-greet">
+      <span id="hiName">Hi, Guest</span>
+      <i class="fa-solid fa-circle-user" style="font-size: 1.2rem;"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="main-card" onclick="document.getElementById('planOptions').style.display = 'flex'">
+      <h2>Start Your House Plan</h2>
+      <p style="font-size: 0.8rem; opacity: 0.9;">Choose 2D Layout or 3D Elevation</p>
+    </div>
+
+    <div class="plan-options" id="planOptions">
+      <a href="2d-plan.html" class="btn-opt">2D Plan</a>
+      <a href="3d-elevation.html" class="btn-opt">3D Elevation</a>
     </div>
   </div>
 
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i>Home</a>
+    <a href="services.html" class="nav-link"><i class="fa-solid fa-compass-drafting"></i>Service</a>
+    <a href="orders.html" class="nav-link"><i class="fa-solid fa-box-open"></i>Order</a>
+    <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyARmOCO4APamzc8wuUlp5rEgPH8hZUMX6U",
@@ -59,46 +77,13 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    window.onload = () => {
-      setTimeout(() => {
-        document.getElementById('splash-screen').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('splash-screen').style.display = 'none';
-          document.getElementById('authContainer').style.opacity = '1';
-        }, 800);
-      }, 3000);
-    };
-
-    let isLogin = true;
-    const toggleBtn = document.getElementById('toggleBtn');
-    const nameField = document.getElementById('nameField');
-    const actionBtn = document.getElementById('actionBtn');
-
-    toggleBtn.addEventListener('click', () => {
-      isLogin = !isLogin;
-      document.getElementById('formTitle').innerText = isLogin ? "Sign In" : "Register";
-      nameField.style.display = isLogin ? "none" : "block";
-      actionBtn.innerText = isLogin ? "Sign In" : "Sign Up";
-      toggleBtn.innerText = isLogin ? "Create New Account" : "Back to Login";
-    });
-
-    actionBtn.addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      if(isLogin) {
-        signInWithEmailAndPassword(auth, email, password).then(() => window.location.href = "index.html").catch(err => alert(err.message));
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const firstName = user.displayName ? user.displayName.split(' ')[0] : "User";
+        document.getElementById('hiName').innerText = "Hi, " + firstName;
       } else {
-        const name = document.getElementById('userName').value;
-        createUserWithEmailAndPassword(auth, email, password).then((res) => {
-          updateProfile(res.user, { displayName: name }).then(() => window.location.href = "index.html");
-        }).catch(err => alert(err.message));
+        window.location.href = "login.html";
       }
-    });
-
-    document.getElementById('forgotPass').addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      if(!email) return alert("Enter email first");
-      sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!"));
     });
   </script>
 </body>
