@@ -4,29 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | e-Naksha</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #4b7dbd, #eb6923); height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
-    .login-card { background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 350px; text-align: center; }
-    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-    button { width: 100%; padding: 12px; background: #eb6923; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
-    button:hover { background: #d1561a; }
-    .toggle-link { margin-top: 15px; font-size: 0.85rem; color: #5c5c5c; cursor: pointer; }
-    #message { color: red; font-size: 0.8rem; margin-top: 10px; }
+    :root { --orange: #eb6923; --blue: #4b7dbd; --grey: #5c5c5c; --bg: #f4f6f9; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--bg); overflow: hidden; }
+    #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s; }
+    .intro-house-svg { width: 120px; margin-bottom: 15px; }
+    .auth-container { display: flex; justify-content: center; align-items: center; height: 100vh; opacity: 0; transform: scale(0.9); transition: 0.8s ease; }
+    .auth-container.show { opacity: 1; transform: scale(1); }
+    .auth-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 380px; text-align: center; }
+    .logo-text { font-family: 'Montserrat'; font-size: 2rem; margin-bottom: 20px; }
+    .logo-text .e { color: var(--orange); }
+    .logo-text .n { color: var(--blue); }
+    input { width: 100%; padding: 12px 15px; margin: 10px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: inherit; outline: none; transition: 0.3s; }
+    input:focus { border-color: var(--orange); }
+    .btn { width: 100%; padding: 12px; background: var(--orange); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+    .btn:hover { background: #d1561a; }
+    .toggle-link { margin-top: 15px; font-size: 0.9rem; color: var(--grey); cursor: pointer; }
   </style>
 </head>
 <body>
+  <div id="splash-screen">
+    <svg class="intro-house-svg" viewBox="0 0 120 100">
+      <path d="M 60 30 L 95 65 V 95 H 75 V 70 H 55 V 95 H 40 V 50 Z" fill="#eb6923" />
+      <path d="M 15 70 L 60 25 L 85 50 L 70 65 L 60 55 L 35 80 Z" fill="#4b7dbd" />
+    </svg>
+    <p style="font-family: 'Montserrat'; color: var(--grey);">Connecting...</p>
+  </div>
 
-  <div class="login-card">
-    <h2 id="formTitle" style="color: #4b7dbd; margin-bottom: 20px;">Login</h2>
-    <div id="nameField" style="display: none;">
-      <input type="text" id="userName" placeholder="Full Name">
+  <div class="auth-container" id="authContainer">
+    <div class="auth-card">
+      <div class="logo-text"><span class="e">e</span>-<span class="n">Naksha</span></div>
+      <h2 id="formTitle" style="margin-bottom: 20px; font-size: 1.2rem; color: var(--grey);">Login</h2>
+      <div id="nameField" style="display: none;"><input type="text" id="userName" placeholder="Full Name"></div>
+      <input type="email" id="email" placeholder="Email Address">
+      <input type="password" id="password" placeholder="Password">
+      <button class="btn" id="actionBtn">Sign In</button>
+      <div class="toggle-link" id="toggleBtn">Create New Account</div>
     </div>
-    <input type="email" id="email" placeholder="Email Address">
-    <input type="password" id="password" placeholder="Password">
-    <button id="actionBtn">Sign In</button>
-    <div id="message"></div>
-    <div class="toggle-link" id="toggleBtn">New to e-Naksha? Create Account</div>
   </div>
 
   <script type="module">
@@ -43,32 +60,31 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    let isLogin = true;
+    window.onload = () => { setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('authContainer').classList.add('show'); }, 3000); };
 
-    document.getElementById('toggleBtn').addEventListener('click', () => {
+    let isLogin = true;
+    const toggleBtn = document.getElementById('toggleBtn');
+    const nameField = document.getElementById('nameField');
+    const actionBtn = document.getElementById('actionBtn');
+
+    toggleBtn.addEventListener('click', () => {
       isLogin = !isLogin;
       document.getElementById('formTitle').innerText = isLogin ? "Login" : "Register";
-      document.getElementById('nameField').style.display = isLogin ? "none" : "block";
-      document.getElementById('actionBtn').innerText = isLogin ? "Sign In" : "Sign Up";
-      document.getElementById('toggleBtn').innerText = isLogin ? "New to e-Naksha? Create Account" : "Already have an account? Login";
+      nameField.style.display = isLogin ? "none" : "block";
+      actionBtn.innerText = isLogin ? "Sign In" : "Sign Up";
+      toggleBtn.innerText = isLogin ? "Create New Account" : "Back to Login";
     });
 
-    document.getElementById('actionBtn').addEventListener('click', () => {
+    actionBtn.addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const msgDiv = document.getElementById('message');
-
       if(isLogin) {
-        signInWithEmailAndPassword(auth, email, password)
-          .then(() => window.location.href = "index.html")
-          .catch(err => msgDiv.innerText = err.message);
+        signInWithEmailAndPassword(auth, email, password).then(() => window.location.href = "index.html").catch(err => alert(err.message));
       } else {
-        const name = document.getElementById('userName').value;
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((res) => {
-            updateProfile(res.user, { displayName: name }).then(() => window.location.href = "index.html");
-          })
-          .catch(err => msgDiv.innerText = err.message);
+        const fullName = document.getElementById('userName').value;
+        createUserWithEmailAndPassword(auth, email, password).then((res) => {
+          updateProfile(res.user, { displayName: fullName }).then(() => window.location.href = "index.html");
+        }).catch(err => alert(err.message));
       }
     });
   </script>
