@@ -9,126 +9,188 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* Base Styles */
+    /* Reset & Base Settings */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background-color: #f4f6f9; overflow-x: hidden; }
 
-    /* Splash Screen */
+    /* =========================================
+       1. SPLASH SCREEN INTRO
+       ========================================= */
     #splash-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-      background-color: #ffffff; display: flex; flex-direction: column; 
-      justify-content: center; align-items: center; z-index: 9999;
+      background-color: #ffffff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 9999;
       transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s;
     }
 
-    /* Header Updates */
-    header {
-      position: fixed; top: 0; width: 100%; padding: 15px 25px;
-      display: flex; justify-content: space-between; align-items: center;
-      background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100;
-    }
+    .intro-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .intro-house-svg { width: 120px; height: auto; margin-bottom: 15px; }
+    .intro-layer-blue { opacity: 0; transform: translateY(-25px); animation: dropIn 0.6s forwards 0.3s; }
+    .intro-layer-orange { opacity: 0; transform: translateY(-25px); animation: dropIn 0.6s forwards 0.8s; }
 
-    .user-profile { display: flex; align-items: center; gap: 10px; color: #eb6923; font-weight: 600; }
-
-    /* Special Hover Effects for Portfolio */
-    .portfolio-item {
-      position: relative; border-radius: 15px; overflow: hidden;
-      transition: all 0.4s ease; cursor: pointer;
-    }
-    .portfolio-item:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .intro-text { display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 4rem; font-weight: 700; line-height: 1; }
+    .intro-e { color: #eb6923; opacity: 0; animation: fadeIn 0.5s forwards 1.3s; }
+    .intro-dash { color: #5c5c5c; opacity: 0; margin: 0 5px; animation: fadeIn 0.5s forwards 1.6s; }
+    .intro-naksha { color: #4b7dbd; opacity: 0; animation: slideRight 0.5s forwards 1.9s; }
     
-    .portfolio-label {
-      position: absolute; bottom: 0; width: 100%; background: rgba(235, 105, 35, 0.9);
-      color: white; padding: 10px; text-align: center; font-weight: 500;
+    .intro-slogan { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: #5c5c5c; margin-top: 10px; opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s forwards 2.5s; letter-spacing: 1px; }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes dropIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* =========================================
+       2. HEADER & NAVIGATION
+       ========================================= */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; height: 75px;
+      background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 5%; z-index: 1000;
+      opacity: 0; transform: translateY(-100%);
+      transition: all 0.8s ease;
     }
+    header.show-header { opacity: 1; transform: translateY(0); }
+
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo-svg { width: 35px; height: auto; }
+    .header-logo-text { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; }
+    .header-logo-text .e { color: #eb6923; }
+    .header-logo-text .dash { color: #5c5c5c; margin: 0 1px; }
+    .header-logo-text .naksha { color: #4b7dbd; }
+
+    .menu-btn { font-size: 1.3rem; color: #5c5c5c; cursor: pointer; transition: 0.3s; }
+    .menu-btn:hover { color: #eb6923; }
 
     /* Side Menu */
-    #sideMenu {
-      position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
-      background: #fff; transition: 0.4s; z-index: 1000; padding: 20px;
-      box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    .side-menu {
+      position: fixed; top: 0; right: -280px; width: 280px; height: 100vh;
+      background: #ffffff; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+      z-index: 2000; transition: right 0.4s ease;
+      display: flex; flex-direction: column; padding: 30px 20px;
     }
-    #sideMenu.active { right: 0; }
-    .logout-btn { margin-top: 20px; color: red; cursor: pointer; font-weight: 600; list-style: none;}
+    .side-menu.active { right: 0; }
+    .side-menu .close-btn { align-self: flex-end; font-size: 1.5rem; color: #5c5c5c; cursor: pointer; margin-bottom: 30px; }
+    .menu-links { list-style: none; }
+    .menu-links li { padding: 15px 0; border-bottom: 1px solid #f0f0f0; font-weight: 500; color: #5c5c5c; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+    .menu-links li:hover { color: #eb6923; padding-left: 8px; }
+    .menu-links li i { width: 20px; font-size: 1.1rem; }
 
-    /* Utility Classes */
-    .show-content { opacity: 1 !important; transform: translateY(0) !important; transition: 1s ease-out; }
+    /* =========================================
+       3. MAIN CONTENT
+       ========================================= */
+    main { padding: 100px 5% 40px; opacity: 0; transition: opacity 1s ease; }
+    main.show-content { opacity: 1; }
+
+    .hero-section { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 30px; text-align: center; }
+    .hero-section h1 { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; color: #4b7dbd; margin-bottom: 10px; }
+    .hero-section p { color: #5c5c5c; font-size: 0.95rem; line-height: 1.6; }
+
+    /* Portfolio Grid */
+    .section-title { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .section-title::before { content: ''; width: 4px; height: 24px; background: #eb6923; border-radius: 2px; }
+
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+    .portfolio-item { position: relative; border-radius: 15px; overflow: hidden; background: #ddd; aspect-ratio: 1/1; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+    .portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .portfolio-item:hover img { transform: scale(1.1); }
+    .portfolio-label { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white; font-size: 0.8rem; font-weight: 500; }
+
   </style>
 </head>
 <body>
 
   <div id="splash-screen">
-    <h1 style="color: #eb6923; font-family: 'Montserrat';">e-Naksha</h1>
-    <p>Loading your dreams...</p>
+    <div class="intro-container">
+      <svg class="intro-house-svg" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+        <path class="intro-layer-orange" d="M 60 30 L 95 65 V 95 H 75 V 70 H 55 V 95 H 40 V 50 Z" fill="#eb6923" />
+        <path class="intro-layer-blue" d="M 15 70 L 60 25 L 85 50 L 70 65 L 60 55 L 35 80 Z" fill="#4b7dbd" />
+      </svg>
+      <div class="intro-text">
+        <span class="intro-e">e</span><span class="intro-dash">-</span><span class="intro-naksha">Naksha</span>
+      </div>
+      <div class="intro-slogan">Sketch Your Dream</div>
+    </div>
   </div>
 
   <header id="main-header">
-    <div class="logo" style="color: #4b7dbd; font-weight: 700; font-size: 1.5rem;">e-<span style="color: #eb6923;">Naksha</span></div>
-    <div style="display: flex; align-items: center; gap: 20px;">
-      <div id="userDisplayName" class="user-profile"></div>
-      <i class="fa-solid fa-bars" onclick="toggleMenu()" style="font-size: 1.5rem; cursor: pointer; color: #5c5c5c;"></i>
+    <div class="header-left">
+      <svg class="header-logo-svg" viewBox="0 0 120 100">
+        <path d="M 60 30 L 95 65 V 95 H 75 V 70 H 55 V 95 H 40 V 50 Z" fill="#eb6923" />
+        <path d="M 15 70 L 60 25 L 85 50 L 70 65 L 60 55 L 35 80 Z" fill="#4b7dbd" />
+      </svg>
+      <div class="header-logo-text">
+        <span class="e">e</span><span class="dash">-</span><span class="naksha">Naksha</span>
+      </div>
+    </div>
+    <div class="menu-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars-staggered"></i>
     </div>
   </header>
 
-  <nav id="sideMenu">
-    <div style="text-align: right;"><i class="fa-solid fa-xmark" onclick="toggleMenu()" style="font-size: 1.5rem; cursor: pointer;"></i></div>
-    <ul style="list-style: none; margin-top: 30px;">
-      <li style="padding: 15px 0; border-bottom: 1px solid #eee;"><i class="fa-solid fa-house"></i> Home</li>
-      <li style="padding: 15px 0; border-bottom: 1px solid #eee;"><i class="fa-solid fa-layer-group"></i> My Plans</li>
-      <li id="logoutBtn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+  <nav class="side-menu" id="sideMenu">
+    <div class="close-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-xmark"></i>
+    </div>
+    <ul class="menu-links">
+      <li><i class="fa-solid fa-house"></i> Home</li>
+      <li><i class="fa-solid fa-layer-group"></i> 2D House Plan</li>
+      <li><i class="fa-solid fa-cube"></i> 3D Elevation</li>
+      <li><i class="fa-solid fa-couch"></i> Interior Design</li>
+      <li><i class="fa-solid fa-images"></i> Portfolio</li>
+      <li><i class="fa-solid fa-phone"></i> Contact Us</li>
     </ul>
   </nav>
 
-  <main id="main-content" style="margin-top: 100px; padding: 20px; opacity: 0; transform: translateY(20px);">
-    <h2 style="margin-bottom: 20px;">Our Portfolio</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-      <div class="portfolio-item">
-        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400" alt="Duplex" style="width: 100%; display: block;">
-        <div class="portfolio-label">Modern Duplex</div>
+  <main id="main-content">
+    <div class="hero-section">
+      <h1>Welcome to e-Naksha</h1>
+      <p>Your one-stop destination for modern house plans, 3D designs, and interior excellence. We turn your imagination into reality.</p>
+    </div>
+
+    <div class="portfolio-section">
+      <div class="section-title">Our Recent Projects</div>
+      
+      <div class="portfolio-grid">
+        <div class="portfolio-item">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop" alt="Duplex House">
+          <div class="portfolio-label">Duplex Home</div>
+        </div>
+        <div class="portfolio-item">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop" alt="Elevation">
+          <div class="portfolio-label">3D Elevation</div>
+        </div>
       </div>
-      <div class="portfolio-item">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400" alt="Elevation" style="width: 100%; display: block;">
-        <div class="portfolio-label">3D Elevation</div>
-      </div>
+
     </div>
   </main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyARmOCO4APamzc8wuUlp5rEgPH8hZUMX6U",
-      authDomain: "enkasha-99c34.firebaseapp.com",
-      projectId: "enkasha-99c34",
-      appId: "1:759836461630:web:30cc76c2c1075a3df99f6f"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Auth Guard & Display Name
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('userDisplayName').innerText = user.displayName || "User";
-        // Hide Splash
+  <script>
+    // Intro to Main Screen Logic
+    window.onload = () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        const header = document.getElementById('main-header');
+        const mainContent = document.getElementById('main-content');
+        
+        splash.style.transform = 'translateY(-100vh)';
+        splash.style.opacity = '0';
+        
         setTimeout(() => {
-          document.getElementById('splash-screen').style.transform = 'translateY(-100vh)';
-          document.getElementById('main-content').classList.add('show-content');
-        }, 2000);
-      } else {
-        window.location.href = "login.html";
-      }
-    });
-
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      signOut(auth).then(() => window.location.href = "login.html");
-    });
-
-    window.toggleMenu = () => {
-      document.getElementById('sideMenu').classList.toggle('active');
+          splash.style.display = 'none'; 
+          header.classList.add('show-header');
+          mainContent.classList.add('show-content');
+        }, 800); 
+      }, 4200); 
     };
+
+    // Side Menu Toggle Logic
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('active');
+    }
   </script>
+
 </body>
 </html>
