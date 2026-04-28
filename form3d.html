@@ -1,0 +1,79 @@
+<div class="auth-container">
+    <div class="auth-title"><span style="color:#eb6923">Order</span> <span style="color:#4b7dbd">Requirements</span></div>
+    
+    <div class="input-group">
+        <label>Total Number of Floors</label>
+        <div class="input-wrapper">
+            <i class="fa-solid fa-building"></i>
+            <input type="text" id="floors" placeholder="e.g. G+1, G+2">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>Architecture Style</label>
+        <div class="input-wrapper">
+            <i class="fa-solid fa-palette"></i>
+            <select id="style">
+                <option value="Modern">Modern</option>
+                <option value="Minimalist">Minimalist</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Contemporary">Contemporary</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>Upload 2D Plan or Reference Image</label>
+        <div class="input-wrapper">
+            <i class="fa-solid fa-image"></i>
+            <input type="file" id="refFile" accept="image/*" style="padding-top: 10px;">
+        </div>
+    </div>
+
+    <button class="auth-btn" id="btnSubmit3D">SUBMIT ORDER</button>
+    <p style="margin-top:15px; text-align:center;"><a href="javascript:void(0)" onclick="switchTab(null, 'service')" style="color:#5c5c5c;">Go Back</a></p>
+</div>
+
+<script type="module">
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const storage = getStorage();
+    const db = getFirestore();
+    const auth = getAuth();
+
+    document.getElementById('btnSubmit3D').onclick = async () => {
+        const file = document.getElementById('refFile').files[0];
+        const flr = document.getElementById('floors').value;
+        if(!file || !flr) return alert("Please provide all details!");
+
+        const btn = document.getElementById('btnSubmit3D');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        try {
+            const sRef = ref(storage, `orders/3d_${auth.currentUser.uid}_${Date.now()}`);
+            const snap = await uploadBytes(sRef, file);
+            const url = await getDownloadURL(snap.ref);
+
+            await addDoc(collection(db, "orders"), {
+                customerName: auth.currentUser.displayName,
+                customerEmail: auth.currentUser.email,
+                serviceType: "3D Elevation",
+                floors: flr,
+                designStyle: document.getElementById('style').value,
+                referenceUrl: url,
+                status: "Received",
+                date: new Date().toLocaleString()
+            });
+
+            alert("3D Order Placed Successfully!");
+            window.switchTab(null, 'home');
+        } catch(e) { 
+            alert("Error: " + e.message); 
+            btn.disabled = false; 
+            btn.innerText = "SUBMIT ORDER"; 
+        }
+    };
+</script>
